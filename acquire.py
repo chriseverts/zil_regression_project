@@ -11,62 +11,56 @@ def get_connection(db, username=username, host=host, password=password):
     '''
     return f'mysql+pymysql://{username}:{password}@{host}/{db}'
 
-
-def new_telco_churn_data():
-    '''
-    Returns telco_churn into a dataframe
-    '''
-    sql_query = '''select * from customers
-    join internet_service_types using(internet_service_type_id)
-    join contract_types using(contract_type_id)
-    join payment_types using(payment_type_id)'''
-    df = pd.read_sql(sql_query, get_connection('telco_churn'))
-    return df 
-
-
-def get_telco_churn_data():
-    '''get connection, returns telco_churn into a dataframe and creates a csv for us'''
-    if os.path.isfile('telco_churn.csv'):
-        df = pd.read_csv('telco_churn.csv', index_col=0)
-    else:
-        df = new_telco_churn_data()
-        df.to_csv('telco_churn.csv')
-    return df
-
-
-#Zillow
+## Zillow
 
 def new_zillow():
-    sql_query ='''select bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet, taxvaluedollarcnt, yearbuilt, taxamount, fips from properties_2017
- 	join propertylandusetype using(propertylandusetypeid)
- 	where propertylandusetypeid = 261'''
+    '''
+    Returns zillow into a dataframe
+    '''
+    sql_query = '''select * from properties_2017
+    join predictions_2017 using(parcelid)
+    where transactiondate between "2017-05-01" and "2017-08-31"
+    and propertylandusetypeid in (260, 261, 262, 263, 264, 265, 266, 273, 275, 276, 279)'''
     df = pd.read_sql(sql_query, get_connection('zillow'))
     return df 
 
 def get_zillow_data():
     '''get connection, returns Zillow into a dataframe and creates a csv for us'''
-    if os.path.isfile('zillow.csv'):
-        df = pd.read_csv('zillow.csv', index_col=0)
+    if os.path.isfile('zillow_proj.csv'):
+        df = pd.read_csv('zillow_proj.csv', index_col=0)
     else:
         df = new_zillow()
-        df.to_csv('zillow.csv')
+        df.to_csv('zillow_proj.csv')
     return df
 
-def wrangle_zillow():
+def clean_zillow(df):
     '''
-    Read zillow csv file into a pandas DataFrame,
-    only returns desired columns and single family residential properties,
-    drop any rows with Null values, drop duplicates,
-    return cleaned zillow DataFrame.
+    this function takes in an unclean zillow df and does the following:
+    1.) keeps only columns we need for the project
+    2.) drops nulls
+    3.) renames columns
     '''
-    # Acquire data from csv file.
-    df = pd.read_csv('zillow.csv')
+    #select features for df, took these features from my acquire exercise
+    features = ['parcelid', 'calculatedfinishedsquarefeet', 'bathroomcnt', 'bedroomcnt', 'taxvaluedollarcnt','yearbuilt','taxamount','fips']
+    df = df[features]
+
     
-    # Drop nulls
-    df = df.dropna()
+    #rename columns for easier use
+    df = df.rename(columns={
+                            'parcelid': 'parcel_id',
+                            'calculatedfinishedsquarefeet': 'sqft',
+                            'bathroomcnt': 'baths',
+                            'bedroomcnt': 'beds',
+                            'taxvaluedollarcnt':'tax_value',
+                            'yearbuilt':'year_built',
+                            'taxamount': 'tax_amount'
+        
+    })
     
-    # Drop duplicates
-    df = df.drop_duplicates()
+    #set index
+    df = df.set_index('parcel_id')
+    #drop nulls
+    df = df.dropna(subset=['sqft','tax_value'])
     
     return df
-
+    
