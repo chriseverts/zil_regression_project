@@ -46,7 +46,7 @@ I built a regression model to predict single unit property values in 3 Californi
 <br>
 <br>
 
-## Hypothesis
+## Hypothesis 
 
 1.) The larger the square footage, the higher the property value
 
@@ -54,7 +54,7 @@ I built a regression model to predict single unit property values in 3 Californi
 
 3.) The more bathrooms a house has, the higher its property value will be
 
-## Findings and Next Steps
+## Findings and Next Steps 
    - Square footage was the best feature for predicting home value, followed up by bedrooms and bathrooms.
    - Age had little factor, however it was used to better our model, but there may be other features we could look into next time.
    - Location still may have a factor in value, but we would need data that is more normally distributed. Most of the properties were in Los Angeles County. 
@@ -66,9 +66,9 @@ Next steps would be:
  - clean up other columns on home features and see if our model would perform with them (lower RMSE, higher r^2) 
 
 
-# The Pipeline: 
+# The Pipeline
 
-## Planning :
+## Planning 
 Goal: Plan out the project
 How does square footage, bathroom count, and bedroom count relate to property value. I believe there will be a 
 positive correlation among these variables. 
@@ -79,11 +79,11 @@ A lot of these features could play hand in hand and help my model make better pr
 Hypotheses: Square footage, number of bedrooms, number of bathrooms have a positive relationship with value. Age has a negative relationship with value. 
 
 
-## Acquire :
+## Acquire 
 Goal: Have Zillow dataframe ready to prepare in acquire.py
 In this stage, I used a connection URL to access the CodeUp database. Using a SQL query, I brought in the Zillow dataset with only properties set for single use (260, 261, 262, 263, 264, 265, 266, 273, 275, 276, 279, and were sold in between May-August 2017. I turned it into a pandas dataframe and created a .csv in order to use it for the rest of the pipeline. 
 
-## Prep :
+## Prep 
 Goal: Have Zillow dataset that is split into train, validate, test, and ready to be analyzed. Assure data types are appropriate and that missing values/duplicates/outliers are addressed. Put this in a prep.py. 
 In this stage, I handled outliers by dropping any rows with values that were 3 standard deviations above or below the mean.
 All columns had a numeric data type, and renamed them for ease of use.
@@ -99,7 +99,7 @@ Plotted a pairplot to see combinations of variables.
 I ran t-tests with the features in respect to tax_value. Also a few to see if the independent variables were related to each other. 
 I found that square footage, bedroom count, and bathroom count were all statistically significant. They are not independent to property value. Bedroom count and bathroom count were also dependent on each other. 
 
-## Modeling and Evaluation :
+## Modeling and Evaluation 
 Goal: develop a regression model that performs better than the baseline.
 
 The models worked best with sqft, baths, beds, and age. Polynomial Regression performed the best, so I did a test on it.
@@ -116,25 +116,24 @@ Test:
  - RMSE of 272,168.27
  - R^2 of 0.403
 
-## Delivery
+## Delivery 
 I will be giving a presentation over my findings
  - All acquire and prepare .py files are uploaded for easy replication.
  - Presentation slides
  - This README 
  - Final notebook that documents a commented walkthrough of my process
 
-# Conclusion
+# Conclusion 
 
-To conclude...
-We took a very large Zillow dataset and condensed it down to 38,475 rows to work with. We dropped rows with outliers of 3 standard deviations above or below the mean for that column. 
+To conclude... We took a very large Zillow dataset and condensed it down to 38,622 rows to work with. We dropped rows with outliers of 3 standard deviations above or below the mean for that column.
 
- -  Square footage was the best feature to determine a property's value. As square footage increased, value also went up.
+1.) Square footage was the best feature. As square footage increased, the value increased.
 
- -  The more bedrooms and bathrooms a house has, the more it was worth. These number of rooms also related to square footage in a positive relationship.
+2.) The more bedrooms and bathrooms a house has, the more it was worth. These number of rooms also related to square footage in a positive relationship.
 
- -  Using all of square footage, number of bedrooms, and number of bathrooms  
+3.) Using all of square footage, number of bedrooms, number of bathrooms, into a model performed better than the baseline.
 
- -  All three counties have similar tax rates, but LA has the highest.
+4.) All three counties have similar tax rates, but LA has the highest.
 
 How to Recreate Project
 
